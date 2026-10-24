@@ -43,6 +43,7 @@ require (
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/mxk/go-sqlite v0.0.0-20140611214908-167da9432e1f // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.15.0 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect

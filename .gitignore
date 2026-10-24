@@ -6,8 +6,8 @@
 -trash
 /expert/hist
 /expert/.swp
-/expert/inv.png
-/expert/gray.png
+/expert/images/inv.png
+/expert/images/gray.png
 latex.aux
 latex.log
 latex.pdf
@@ -15,3 +15,4 @@ latex.tex
 template_latex.aux
 template_latex.log
 flight.trace
+/advanced/output

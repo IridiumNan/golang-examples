@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 )
 
-var size int64 = 5 * 1024 * 1024
-var html = template.Must(template.New("html").Parse(`
+var (
+	size int64 = 5 * 1024 * 1024
+	html       = template.Must(template.New("html").Parse(`
 <!DOCTYPE html>
 <html>
 	<head>
@@ -25,6 +26,7 @@ var html = template.Must(template.New("html").Parse(`
 	</body>
 </html>
 `))
+)
 
 func root(w http.ResponseWriter, r *http.Request) {
 	err := html.Execute(w, nil)
@@ -44,8 +46,8 @@ func upload(w http.ResponseWriter, r *http.Request) {
 		for _, fileHeader := range fileHeaders {
 			file, _ := fileHeader.Open()
 			path = fmt.Sprintf("%s", fileHeader.Filename)
-			buf, _ := ioutil.ReadAll(file)
-			ioutil.WriteFile(path, buf, os.ModePerm)
+			buf, _ := io.ReadAll(file)
+			os.WriteFile(path, buf, os.ModePerm)
 		}
 	}
 	fmt.Printf("File \"%v\" uploaded\n", path)

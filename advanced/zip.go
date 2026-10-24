@@ -4,17 +4,46 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
+	"log/slog"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
 
+const rootDir = "golang-examples"
+
+// cdRootDir is a uitl function to change dir into project root
+// to ensure example.zip can be found properly
+func cdRootDir() {
+	dir, err := os.Getwd()
+	if err != nil {
+		slog.Warn("while getting current dir for find archive file, assume current dir as project root", "err", err)
+		slog.Info("if run failed, change your dir to golang-example first")
+		return
+	}
+	for path.Base(dir) != rootDir {
+
+		slog.Info("current dir is not root dir, change to parent dir", "curr", dir)
+		err = os.Chdir("..")
+		if err != nil {
+			slog.Error("while change dir", "err", err)
+		}
+	}
+}
+
+func cdAdvanced() {
+	err := os.Chdir("advanced")
+	if err != nil {
+		slog.Error("while changing dir to advanced", "err", err)
+		slog.Info("if you want to run this file manually, comment the `cdRootDir` and `cdAdvanced` function call on main")
+	}
+}
+
 func ZipContent(file string) []string {
 	var filenames []string
 	archive, err := zip.OpenReader(file)
-
 	if err != nil {
 		panic(err)
 	}
@@ -22,7 +51,7 @@ func ZipContent(file string) []string {
 
 	for _, f := range archive.File {
 		if f.Name[0:1] == "." {
-			//hide hidden files
+			// hide hidden files
 			continue
 		}
 		filenames = append(filenames, f.Name)
@@ -94,7 +123,7 @@ func ReadZipped(zipFile, file string) string {
 		}
 		defer fileInArchive.Close()
 
-		data, err := ioutil.ReadAll(fileInArchive)
+		data, err := io.ReadAll(fileInArchive)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -105,6 +134,10 @@ func ReadZipped(zipFile, file string) string {
 }
 
 func main() {
+	// change dir for find the zip package
+	cdRootDir()
+	cdAdvanced()
+
 	files := ZipContent("example.zip")
 
 	fmt.Printf("%#v\n", files)
